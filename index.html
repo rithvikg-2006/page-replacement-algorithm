@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Replacement Algorithm</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+</head>  
+<body>
+
+    <header class="header">
+        <div class="brand">
+            <div class="brand-icon">
+                <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="1" width="6" height="6" rx="1" fill="white" opacity="0.9"/>
+                    <rect x="9" y="1" width="6" height="6" rx="1" fill="white" opacity="0.6"/>
+                    <rect x="1" y="9" width="6" height="6" rx="1" fill="white" opacity="0.6"/>
+                    <rect x="9" y="9" width="6" height="6" rx="1" fill="white" opacity="0.3"/>
+                </svg>
+            </div>
+            <div class="brand-name">Page Replacement <span>Algorithm</span></div>
+        </div>
+        <div class="header-pills">
+            <span class="pill fifo">FIFO</span>
+            <span class="pill lru">LRU</span>
+            <span class="pill opt">Optimal</span>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div>
+                <div class="section-label">Simulation Setup</div>
+                <form id="inputForm">
+                    <div class="form-group">
+                        <label for="referenceString">Reference String</label>
+                        <input type="text" id="referenceString"
+                            placeholder="e.g. 7,0,1,2,0,3,0,4"
+                            value="7,0,1,2,0,3,0,4,2,3,0,3,0,3,2,1,2,0,1,7,0,1">
+                        <small>Comma or space-separated integers</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="numFrames">Memory Frames</label>
+                        <input type="number" id="numFrames" min="1" max="20" value="3">
+                        <small>Physical memory frames available (1–20)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="algorithm">Algorithm</label>
+                        <select id="algorithm">
+                            <option value="all">Compare all three</option>
+                            <option value="fifo">FIFO — First In, First Out</option>
+                            <option value="lru">LRU — Least Recently Used</option>
+                            <option value="optimal">Optimal (Belady's)</option>
+                        </select>
+                    </div>
+                    <div class="btn-stack">
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                                <polygon points="2,1 11,6.5 2,12" fill="white"/>
+                            </svg>
+                            Run Simulation
+                        </button>
+                        <button type="button" id="randomBtn" class="btn btn-secondary">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.4">
+                                <path d="M2 7a5 5 0 1 0 10 0A5 5 0 0 0 2 7z"/>
+                                <path d="M7 4.5v2.5l1.5 1.5" stroke-linecap="round"/>
+                            </svg>
+                            Random Input
+                        </button>
+                        <button type="button" id="resetBtn" class="btn btn-ghost">
+                            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                                <path d="M2 2l9 9M11 2L2 11"/>
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
+                    <div class="error-box" id="errorMessage"></div>
+                </form>
+            </div>
+
+            <div>
+                <div class="section-label">Algorithm Guide</div>
+                <div class="theory-list">
+                    <div class="theory-card">
+                        <div class="theory-card-head">
+                            <div class="theory-dot" style="background:var(--fifo-color)"></div>
+                            <strong>FIFO</strong>
+                            <span class="theory-badge" style="background:var(--fifo-bg);color:var(--fifo-color)">Simple</span>
+                        </div>
+                        <p>Evicts the oldest page in memory. Predictable but prone to Belady's Anomaly.</p>
+                    </div>
+                    <div class="theory-card">
+                        <div class="theory-card-head">
+                            <div class="theory-dot" style="background:var(--lru-color)"></div>
+                            <strong>LRU</strong>
+                            <span class="theory-badge" style="background:var(--lru-bg);color:var(--lru-color)">Practical</span>
+                        </div>
+                        <p>Evicts the least recently used page. Works well in real workloads; widely implemented.</p>
+                    </div>
+                    <div class="theory-card">
+                        <div class="theory-card-head">
+                            <div class="theory-dot" style="background:var(--opt-color)"></div>
+                            <strong>Optimal</strong>
+                            <span class="theory-badge" style="background:var(--opt-bg);color:var(--opt-color)">Theoretical</span>
+                        </div>
+                        <p>Evicts the page farthest in the future. Minimum faults — only a benchmark, needs future knowledge.</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main">
+            <div class="empty-state" id="emptyState">
+                <div class="empty-icon">
+                    <svg viewBox="0 0 26 26" fill="none" stroke="var(--text-hint)" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="3" width="9" height="9" rx="2"/>
+                        <rect x="14" y="3" width="9" height="9" rx="2"/>
+                        <rect x="3" y="14" width="9" height="9" rx="2"/>
+                        <rect x="14" y="14" width="9" height="9" rx="2"/>
+                    </svg>
+                </div>
+                <h2>No simulation yet</h2>
+                <p>Configure your reference string and frames, then click <strong>Run Simulation</strong> to see the results.</p>
+            </div>
+
+            <div class="results-wrap" id="resultsWrap">
+                <div>
+                    <div class="section-label" style="margin-bottom:12px">Results Overview</div>
+                    <div class="stat-grid" id="summaryCards"></div>
+                </div>
+
+                <div class="tabs-wrap">
+                    <div class="tab-header">
+                        <button class="tab-btn active" data-tab="schedule">Schedule View</button>
+                        <button class="tab-btn" data-tab="detailed">Detailed Steps</button>
+                    </div>
+                    <div id="schedule" class="tab-panel active">
+                        <div id="scheduleContent"></div>
+                    </div>
+                    <div id="detailed" class="tab-panel">
+                        <div id="detailedContent"></div>
+                    </div>
+                    <div class="legend-row">
+                        <span class="legend-item"><span class="legend-dot" style="background:var(--hit)"></span>Hit</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:var(--fault)"></span>Fault</span>
+                        <span class="legend-item"><span class="legend-dot" style="background:var(--replaced)"></span>Replaced</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
