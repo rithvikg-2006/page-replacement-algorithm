@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Page Replacement Visualizer
 
 A clean, interactive web application for simulating and visualizing **page replacement algorithms** used in Operating Systems memory management. Built with vanilla HTML, CSS, and JavaScript — no dependencies, no build step.
@@ -139,6 +138,3 @@ This tool is designed for OS coursework. Suggested uses:
 
 - *Operating System Concepts* — Silberschatz, Galvin & Gagne (Chapter 9: Virtual Memory)
 - *Modern Operating Systems* — Tanenbaum (Chapter 3: Memory Management)
-=======
-# page-replacement-algorithm
->>>>>>> 2dc95905fd3b81c2885f694e96f1cf94298cad7e
